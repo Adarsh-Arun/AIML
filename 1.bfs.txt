@@ -1,0 +1,46 @@
+from collections import deque
+
+graph = {
+   
+    '1':set(['2', '3']),  
+    '2':set(['4','5']), 
+    '3':set(['6', '7']),
+    '4':set([]),
+    '5':set([]),
+    '6':set([]),
+    '7':set([])
+}
+visited = []
+queue = []   
+
+def bfs(graph, root):
+    
+    # visited.append(root)
+    # queue.append(root)
+    queue = deque([root])
+
+    
+    
+
+    while queue:
+        # m = queue.pop(0) 
+        print(f"Visited Queue: {visited}")
+        print(f"Ready Queue: {list(queue)}")
+        node = queue.popleft()
+      
+        
+         # for i in neighbors:             
+    #     if i not in visited:   
+    #       print ("non traversal".format (i,"is a neighbor of",m))                                            
+    #       bfs(visited,graph,i)         
+    
+    # print (m, end = " ") 
+
+        if node not in visited:
+            queue.extend(graph[node] - set(visited))
+            visited.append(node)
+            # queue.extend(graph[node] - set(visited))
+
+    print(f"Final Visited Queue: {visited}")
+
+bfs(graph, '1') 

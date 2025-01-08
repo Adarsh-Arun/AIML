@@ -1,0 +1,18 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+ds = pd.read_csv('creditcard_2023(odd).csv')
+ds.head()
+ds.tail()
+ds.shape
+ds.info()
+ds.describe()
+ds.isnull().sum()
+ds['column_name'].mean()
+ds['column_name'].max()
+ds['column_name'].min()
+ds[ds['Language']=='en'].count()
+ds[ds['Job'] == 'Lawyer'].info()
+ds['AM or PM'].value_counts()
+ds['Job'].value_counts().head(5)
+ds.drop(columns="id", inplace=True)

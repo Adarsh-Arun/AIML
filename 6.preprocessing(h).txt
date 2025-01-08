@@ -1,0 +1,67 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+toyota = pd.read_csv("ToyotaCorolla.csv")
+
+toyota.head()
+toyota.describe()
+toyota.info()
+toyota.isna().sum()
+
+#DATA CLEANING
+toyota = pd.DataFrame(toyota)
+toyota_clean=toyota.copy()
+toyota_clean.drop(columns="Fuel_Type", inplace=True)
+toyota_clean.drop(columns="Model", inplace=True)
+toyota_clean.info()
+toyota_clean.corr()
+
+# FEATURE ENGINEERING: SELECTING TOP FEATURES WITH HIGEST IMPACT
+corr_matrix = toyota_clean.corr()
+corr_matrix_target=corr_matrix["Price"].drop("Price")
+most_positive = corr_matrix_target[corr_matrix_target > 0].nlargest(5).index.tolist()
+most_negative = corr_matrix_target[corr_matrix_target < 0].nlargest(5).index.tolist()
+print("Most positively co-related features:", most_positive)
+print("Most negatively co-related features:", most_negative)
+
+#Cylinders is nan? because everything is 4 apparently
+toyota_clean["Cylinders"].unique()
+
+#DATA VISUALIZATION for Feature Engineering
+plt.figure(figsize=(30, 30))
+sns.heatmap(toyota_clean.corr(), annot=True, cmap="Blues")
+
+# DATA VISUALIZATION OF THE TOP MOST FEATURES:
+title = "Pair plot of most impactful features"
+final_features = most_positive + most_negative
+pairplot_data=toyota_clean[final_features + ["Price"]]
+sns.pairplot(pairplot_data, hue="Price")
+plt.show()
+
+# FEATURE SCALING and OUTLIER DETECTION WITH BOXPLOTS for TOP MOST FEATURES
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from sklearn.preprocessing import Normalizer
+
+price_ranges = np.percentile(toyota_clean['Price'], np.linspace(0, 100, num=6))
+
+toyota_clean['Price Category'] = pd.cut(toyota_clean['Price'],bins=price_ranges,labels=['Range 1', 'Range 2', 'Range 3','Range 4','Range 5'])
+
+final_features = most_positive + most_negative
+normalizer = Normalizer()
+toyota_normalized = toyota_clean.copy()
+toyota_normalized[final_features] = normalizer.fit_transform(toyota_clean[final_features])
+
+fig, axes = plt.subplots(ncols=len(final_features),figsize=(8*len(final_features), 6))
+
+for i, feature in enumerate(final_features):
+sns.boxplot(ax=axes[i], x="Price Category", y=feature, data=toyota_normalized, showfliers=True, palette="Set2")
+ axes[i].set_title(f'Boxplot for {feature} with Outliers (Normalized)')
+ axes[i].set_xlabel('Price Category')
+ axes[i].set_ylabel(feature)
+
+ plt.tight_layout(pad=2.0)
+ plt.show()

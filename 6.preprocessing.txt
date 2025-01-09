@@ -1,0 +1,133 @@
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+data=pd.read_csv("./bank-marketing.csv")
+data.head()
+data.isnull().sum()
+data.isna().sum()
+data
+data.describe()
+data.info()
+data.nunique()
+data.info()
+from sklearn.preprocessing import LabelEncoder
+le=LabelEncoder()
+newdata=data.copy()
+newdata.job=le.fit_transform(data.job)
+newdata.marital=le.fit_transform(data.marital)
+newdata.education=le.fit_transform(data.education)
+newdata.poutcome=le.fit_transform(data.poutcome)
+newdata.month=le.fit_transform(data.month)
+newdata.targeted=le.fit_transform(data.targeted)
+newdata.default=le.fit_transform(data.default)
+newdata.housing=le.fit_transform(data.housing)
+newdata.loan=le.fit_transform(data.loan)
+newdata.contact=le.fit_transform(data.contact)
+newdata.response=le.fit_transform(data.response)
+newdata
+newdata['balance'].mean()
+import warnings
+warnings.filterwarnings("ignore")
+plt.figure(figsize=(16,5))
+plt.subplot(1,2,1)
+sns.histplot(newdata['salary'])
+plt.subplot(1,2,2)
+sns.histplot(newdata['balance'])
+plt.show()
+plt.figure(figsize=(16,5))
+plt.subplot(1,2,1)
+sns.boxplot(newdata['salary'])
+plt.subplot(1,2,2)
+sns.boxplot(newdata['balance'])
+percent25=newdata["balance"].quantile(0.25)
+percent75=newdata["balance"].quantile(0.75)
+iqr=percent75-percent25
+upperlimit=iqr*1.5+percent75
+lowerlimit=iqr*1.5-percent25
+newdata[newdata['balance'] > upperlimit]
+newdata[newdata['balance'] < lowerlimit]
+new_df=newdata[newdata["balance"] < upperlimit]
+new_df=newdata[newdata["balance"] < lowerlimit]
+new_df = newdata[newdata['balance'] < upperlimit]
+new_df.shape
+new_df['balance'].mean()
+plt.figure(figsize=(16,8))
+plt.subplot(2,2,1)
+sns.distplot(newdata['balance'])
+plt.subplot(2,2,2)
+sns.boxplot(newdata['balance'])
+plt.subplot(2,2,3)
+sns.distplot(new_df['balance'])
+plt.subplot(2,2,4)
+sns.boxplot(new_df['balance'])
+plt.show()
+correlation=new_df.corr()
+fig, ax = plt.subplots(figsize=(15, 10))
+ax = sns.heatmap(correlation,annot=True); 
+
+
+
+
+____________________________________________________________________
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+ds = pd.read_csv('creditcard_2023(odd).csv')
+ds.head()
+ds.shape
+ds.info()
+ds.drop(columns="id", inplace=True)
+ds.describe()
+ds.isnull().sum()
+ 
+x = ds.drop("Class", axis=1)
+y = ds["Class"]
+x
+y
+print('Shape of X:',x.shape)
+print('Shape of Y:',y.shape)
+ 
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.3)
+ 
+import seaborn as sns
+sns.countplot(data= ds, x ="Class")
+plt.show()
+ 
+plt.figure(figsize=(20, 20))
+plt.title('Credit Card Transactions Features Correlation Plot')
+sns.heatmap(ds.corr(), annot=True, fmt=".2f",linewidths=1,linecolor="black")
+plt.show()
+ 
+import seaborn as sns
+import matplotlib.pyplot as plt
+feature_pairs = [('V17', 'V18'), ('V16', 'V17'), ('V14', 'V4'), ('V12', 'V10'), ('V fig, axes = plt.subplots(nrows=len(feature_pairs), ncols=1, figsize=(8, 6*len(featu
+for i, (feature1, feature2) in enumerate(feature_pairs):
+ 
+ sns.scatterplot(x=feature1, y=feature2, hue='Class', data=ds, ax=axes[i], alpha
+ 
+ correlation = ds[feature1].corr(ds[feature2])
+ axes[i].annotate(f'Correlation: {correlation:.2f}', xy=(0.05, 0.95), xycoords='
+ 
+ axes[i].set_title(f'Scatter Plot for {feature1} vs {feature2}')
+ axes[i].set_xlabel(feature1)
+ axes[i].set_ylabel(feature2)
+plt.tight_layout()
+plt.show()
+ 
+fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(12, 6))
+sns.boxplot(ax=ax1, x="Class", y="Amount", hue="Class", data=ds, showfliers=True)
+sns.boxplot(ax=ax2, x="Class", y="Amount", hue="Class", data=ds, showfliers=False)
+ax1.set_title('Boxplot with Outliers')
+ax1.set_xlabel('Class')
+ax1.set_ylabel('Amount')
+ax2.set_title('Boxplot without Outliers')
+ax2.set_xlabel('Class')
+ax2.set_ylabel('Amount')
+plt.tight_layout()
+plt.show()

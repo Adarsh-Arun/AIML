@@ -1,0 +1,24 @@
+
+LINK- https://www.kaggle.com/datasets/uciml/iris #To download iris dataset
+
+import pandas as pd
+from sklearn.naive_bayes import GaussianNB
+df_=pd.read_csv('IRIS.csv')
+df_=df_.dropna(axis=1,how='any')
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.neural_network import MLPClassifier 
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+le.fit(["Iris-setosa", "Iris-versicolor", "Iris-viginica"])
+le.transform(["Iris-setosa", "Iris-versicolor", "Iris-viginica"])
+x=df_.iloc[:,0:3]
+obj=StandardScaler()
+x_=obj.fit_transform(x)
+y=df_['Species']
+X_train, X_test, y_train, y_test = train_test_split(x_, y, test_size=0.4,random_state=42)
+X_validate, X_test1, y_validate, y_test1=train_test_split(X_test,y_test,test_size=0.5,random_state=42)
+bayes=GaussianNB(priors=None)
+bayes.fit(X_train,y_train)
+print(bayes.score(X_validate,y_validate))
+print(bayes.score(X_test1,y_test1))

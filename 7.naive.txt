@@ -1,0 +1,50 @@
+import pandas as pd
+from sklearn.naive_bayes import GaussianNB
+df_=pd.read_csv('IRIS.csv')
+df_=df_.dropna(axis=1,how='any')
+from sklearn.preprocessing import StandardScaler 
+from sklearn.model_selection import train_test_split 
+from sklearn.neural_network import MLPClassifier 
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+le.fit(["Iris-setosa", "Iris-versicolor", "Iris-viginica"])
+le.transform(["Iris-setosa", "Iris-versicolor", "Iris-viginica"])
+x=df_.iloc[:,0:3]
+obj=StandardScaler()
+x_=obj.fit_transform(x)
+y=df_['species']
+X_train, X_test, y_train, y_test = train_test_split(x_, y, test_size=0.4,random_state=42)
+X_validate, X_test1, y_validate, y_test1=train_test_split(X_test,y_test,test_size=0.5,random_state=42)
+bayes=GaussianNB(priors=None)
+bayes.fit(X_train,y_train)
+print(bayes.score(X_validate,y_validate))
+print(bayes.score(X_test1,y_test1))
+
+
+https://www.kaggle.com/datasets/uciml/iris
+
+
+_________________________________________________________
+import pandas as pd
+df = pd.read_csv("/content/titanic.csv")
+df.head()
+df.tail()
+from matplotlib import pyplot as plt
+import seaborn as sns
+df.groupby('Sex').size().plot(kind='barh', color=sns.palettes.mpl_palette('Dark2'))
+plt.gca().spines[['top', 'right',]].set_visible(False)
+df.columns[df.isna().any()]
+from sklearn.naive_bayes import GaussianNB
+model = GaussianNB()
+from sklearn.model_selection import train_test_split
+X= df.drop('Survived',axis=1)
+Y= df['Survived']
+X_train, X_test, y_train, y_test = train_test_split(X,Y,test_size=0.3,random_state=10)
+X_test
+X_train
+X_test
+y_train
+y_test
+from sklearn.model_selection import cross_val_score
+cross_val_score(GaussianNB(),X_train, y_train, cv=5)
+

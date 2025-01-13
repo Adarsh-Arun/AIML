@@ -1,0 +1,21 @@
+
+import pandas as pd 
+from matplotlib import pyplot as plt
+
+df=pd.read_csv('wine1.csv')
+
+from sklearn.preprocessing import StandardScaler 
+from sklearn.model_selection import train_test_split
+from sklearn.cluster import KMeans
+from sklearn.metrics import accuracy_score
+
+km=KMeans(n_clusters=3,max_iter=400,verbose=True,tol=0.2)
+
+pred = km.fit_predict(df[['Alcohol','Malicacid']])
+plt.scatter(df['Alcohol'], df['Malicacid'],c=df['Magnesium'])
+
+score = accuracy_score(df['Magnesium'], pred)
+
+plt.scatter(df['Alcohol'], df['Malicacid'], c=pred)
+
+plt.scatter(km.cluster_centers_[:,0] ,km.cluster_centers_[:,1],color='black')
